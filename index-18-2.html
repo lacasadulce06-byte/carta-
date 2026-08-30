@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Casa Dulce - Menú Interactivo</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- TIPOGRAFÍA ORIGINAL: Playfair Display + Quicksand -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dulceCream: '#FAF6F0',
+                        dulceBrownDark: '#4A3525',
+                        dulceBrownLight: '#5C4033',
+                        dulceGold: '#C89D7C',
+                        dulceGoldHover: '#B58966',
+                        dulceGreen: '#3E5634',
+                        dulceGreenHover: '#2E4325',
+                        dulceAccent: '#B2533E',
+                        dulceBox: '#EFEAE2',
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Quicksand', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #FAF6F0;
+            color: #4A3525;
+            font-family: 'Quicksand', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        @keyframes dropTopping {
+            0% { transform: translateY(-150px) scale(0.3) rotate(0deg); opacity: 0; }
+            60% { transform: translateY(15px) scale(1.1) rotate(15deg); opacity: 1; }
+            85% { transform: translateY(-8px) scale(0.95) rotate(-10deg); }
+            100% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        @keyframes dripDown {
+            0% { transform: scaleY(0); transform-origin: top; }
+            100% { transform: scaleY(1); transform-origin: top; }
+        }
+
+        .topping-drop {
+            animation: dropTopping 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .sauce-drip {
+            animation: dripDown 0.9s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #FAF6F0; }
+        ::-webkit-scrollbar-thumb { background: #C89D7C; border-radius: 10px; }
+    </style>
+</head>
+
+<body class="min-h-screen pb-16">
+
+    <!-- PORTADA -->
+    <div class="relative max-w-4xl mx-auto mt-0 md:mt-4 overflow-hidden rounded-b-[40px] md:rounded-[40px] bg-dulceBrownDark shadow-2xl text-white text-center px-6 py-12 md:py-16">
+        <div class="absolute inset-0 opacity-5 bg-[radial-gradient(#C89D7C_1px,transparent_1px)] [background-size:16px_16px]"></div>
+
+        <div class="relative z-10 flex flex-col items-center">
+            <div class="w-20 h-20 bg-white rounded-full border border-dulceGold p-1.5 shadow-md flex items-center justify-center mb-4 transition-transform hover:rotate-6">
+                <svg viewBox="0 0 200 200" class="w-full h-full text-dulceGreen">
+                    <circle cx="100" cy="100" r="95" fill="none" stroke="currentColor" stroke-width="2" />
+                    <circle cx="100" cy="100" r="90" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3 3" />
+                    <g transform="translate(112, 45) scale(0.55)">
+                        <path d="M 12,0 C 25,0 28,15 20,28 C 15,36 9,38 0,38 C -9,38 -15,36 -20,28 C -28,15 -25,0 -12,0 Z" fill="#B2533E"/>
+                        <circle cx="0" cy="12" r="1" fill="#FAF6F0"/>
+                        <path d="M -15,3 C -8,5 -3,-5 0,2 C 3,-5 8,5 15,3 C 10,8 6,8 0,5 C -6,8 -10,8 -15,3 Z" fill="currentColor"/>
+                    </g>
+                    <path d="M 45,100 Q 100,45 155,100 Q 140,100 135,95 Q 100,60 65,95 Q 60,100 45,100 Z" fill="currentColor" />
+                    <rect x="118" y="70" width="10" height="22" fill="currentColor"/>
+                    <path d="M 90,120 A 10 10 0 0 1 110 120 L 110,135 L 90,135 Z" fill="currentColor" />
+                    <path d="M 50,140 Q 100,128 150,140" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </div>
+
+            <span class="text-xs font-bold text-dulceGold uppercase tracking-[0.3em] mb-1">Postres Artesanales</span>
+            <h1 class="font-serif text-4xl md:text-5xl font-extrabold tracking-wider leading-tight">La Casa Dulce</h1>
+
+            <p class="text-dulceGold/90 font-serif italic text-sm max-w-md mx-auto mt-3 font-medium leading-relaxed">
+                "Cremosidad perfecta en cada capa, elaborados con puro amor."
+            </p>
+        </div>
+    </div>
+
+    <!-- NAVEGACIÓN -->
+    <div class="max-w-md mx-auto mt-6 px-4">
+        <div class="flex justify-between items-center bg-[#EFEAE2] p-1.5 rounded-2xl shadow-inner gap-1">
+            <button id="tabButton_carta" onclick="switchTab('carta')" class="flex-1 py-3 px-4 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 bg-dulceBrownDark text-white shadow-md">
+                📖 Carta
+            </button>
+            <button id="tabButton_armar" onclick="switchTab('armar')" class="flex-1 py-3 px-4 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 text-dulceBrownDark/70 hover:bg-white/40">
+                🧁 Armar
+            </button>
+            <button id="tabButton_carrito" onclick="switchTab('carrito')" class="flex-1 py-3 px-4 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 text-dulceBrownDark/70 hover:bg-white/40 relative">
+                🛒 Carrito
+                <span id="badgeCarritoCount" class="absolute -top-1 -right-1 bg-dulceAccent text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold hidden">0</span>
+            </button>
+        </div>
+    </div>
+
+    <main class="max-w-4xl mx-auto px-4 mt-6">
+
+        <!-- ==================== CARTA ==================== -->
+        <section id="tabContent_carta" class="space-y-8">
+
+            <!-- FRESAS -->
+            <div>
+                <div class="flex items-center justify-between border-b border-dulceBox pb-3 mb-6">
+                    <h3 class="font-serif text-2xl font-extrabold text-dulceBrownDark flex items-center gap-2">
+                        🍓 Fresas con Crema Tradicionales
+                    </h3>
+                </div>
+
+                <p class="text-xs text-dulceBrownLight font-medium mb-4 bg-white p-4 rounded-2xl border border-dulceBox shadow-sm">
+                    ✨ <strong>Base:</strong> Crema artesanal, fresas, queso + 1 salsa de elección + 1 topping de elección incluidos.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-white p-5 rounded-3xl border border-dulceBox flex flex-col justify-between shadow-sm">
+                        <div>
+                            <span class="text-sm md:text-base font-extrabold text-dulceAccent uppercase">Vaso 12 Onzas</span>
+                            <h4 class="font-serif text-lg font-bold text-dulceBrownDark mt-1">Fresas Tradicionales</h4>
+                            <span class="font-serif text-xl font-extrabold text-dulceGreen block mt-2">$18.000</span>
+                        </div>
+                        <button onclick="personalizarPostreEnSimulador('fresas', '12oz')" class="mt-4 w-full bg-dulceBrownDark hover:bg-dulceBrownLight text-white py-2.5 rounded-xl text-xs font-bold transition-all">
+                            🎨 Armar e Incluir Sabores
+                        </button>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-3xl border border-dulceBox flex flex-col justify-between shadow-sm">
+                        <div>
+                            <span class="text-sm md:text-base font-extrabold text-dulceAccent uppercase">Vaso 16 Onzas</span>
+                            <h4 class="font-serif text-lg font-bold text-dulceBrownDark mt-1">Fresas Tradicionales</h4>
+                            <span class="font-serif text-xl font-extrabold text-dulceGreen block mt-2">$24.000</span>
+                        </div>
+                        <button onclick="personalizarPostreEnSimulador('fresas', '16oz')" class="mt-4 w-full bg-dulceBrownDark hover:bg-dulceBrownLight text-white py-2.5 rounded-xl text-xs font-bold transition-all">
+                            🎨 Armar e Incluir Sabores
+                        </button>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-3xl border border-dulceBox flex flex-col justify-between shadow-sm">
+                        <div>
+                            <span class="text-sm md:text-base font-extrabold text-dulceAccent uppercase">Vaso 22 Onzas</span>
+                            <h4 class="font-serif text-lg font-bold text-dulceBrownDark mt-1">Fresas Tradicionales</h4>
+                            <span class="font-serif text-xl font-extrabold text-dulceGreen block mt-2">$28.000</span>
+                        </div>
+                        <button onclick="personalizarPostreEnSimulador('fresas', '22oz')" class="mt-4 w-full bg-dulceBrownDark hover:bg-dulceBrownLight text-white py-2.5 rounded-xl text-xs font-bold transition-all">
+                            🎨 Armar e Incluir Sabores
+                        </button>
+                    </div>
+                </div>
+
+                <h4 class="font-serif text-lg font-bold text-dulceBrownDark mb-3">⭐ Bowls Premium de Fresas con Crema</h4>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-white p-5 rounded-3xl border border-dulceBox flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="flex justify-between items-start">
+                                <h5 class="font-serif text-base font-bold text-dulceBrownDark">Oble Bowl</h5>
+                                <span class="font-serif text-base font-bold text-dulceAccent">$20.000</span>
+                            </div>
+                            <p class="text-xs text-dulceBrownLight/80 font-medium mt-2">
+                                Fresas con crema, oblea crujiente, queso, salsa de arequipe y de mora artesanal.
+                            </p>
+                        </div>
+                        <button onclick="comprarPostrePredefinido('Oble Bowl Premium', 20000, 'Fresas con crema, oblea, queso, salsa de arequipe y de mora artesanal')" class="mt-4 w-full bg-dulceGreen hover:bg-dulceGreenHover text-white py-2.5 rounded-xl text-xs font-bold transition-all">
+                            ➕ Añadir al Carrito
+                        </button>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-3xl border border-dulceBox flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="flex justify-between items-start">
+                                <h5 class="font-serif text-base font-bold text-dulceBrownDark">Fresura Frutal</h5>
+                                <span class="font-serif text-base font-bold text-dulceAccent">$22.000</span>
+                            </div>
+                            <p class="text-xs text-dulceBrownLight/80 font-medium mt-2">
+                                Fresas frescas, trozos de mango 🥭, crema artesanal, queso salsa de arequipe y lecherita.
+                            </p>
+                        </div>
+                        <button onclick="comprarPostrePredefinido('Fresura Frutal Premium', 22000, 'Fresas, mango, crema artesanal, queso salsa de arequipe y lecherita')" class="mt-4 w-full bg-dulceGreen hover:bg-dulceGreenHover text-white py-2.5 rounded-xl text-xs font-bold transition-all">
+                            ➕ Añadir al Carrito
+                        </button>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-3xl border border-dulceBox flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="flex justify-between items-start">
+                                <h5 class="font-serif text-base font-bold text-dulceBrownDark">Blow Chocolatoso 🍫</h5>
+                                <span class="font-serif text-base font-bold text-dulceAccent">$22.000</span>
+                            </div>
+                            <p class="text-xs text-dulceBrownLight/80 font-medium mt-2">
+                                Fresas con crema artesanal de la casa, queso, salsa de chocolate, topping de brownie y de Oreo.
+                            </p>
+                        </div>
+                        <button onclick="comprarPostrePredefinido('Blow Chocolatoso Premium', 22000, 'Fresas con crema artesanal de la casa, queso, salsa de chocolate, topping de brownie y de Oreo')" class="mt-4 w-full bg-dulceGreen hover:bg-dulceGreenHover text-white py-2.5 rounded-xl text-xs font-bold transition-all">
+                            ➕ Añadir al Carrito
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAVÉS -->
+            <div>
+                <div class="flex items-center justify-between border-b border-dulceBox pb-3 mb-6">
+                    <h3 class="font-serif text-2xl font-extrabold text-dulceBrownDark flex items-center gap-2">
+                        🌟 Pavés Cremosos
+                    </h3>
+                </div>
+
+                <div class="bg-white rounded-3xl p-5 border border-dulceBox shadow-sm flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h4 class="font-serif text-lg font-bold text-dulceBrownDark">Pavé Base Tradicional</h4>
+                            <span class="text-xs bg-dulceGreen/10 text-dulceGreen px-2.5 py-0.5 rounded-full font-bold">$15.000</span>
+                        </div>
+                        <p class="text-xs text-dulceBrownLight font-medium mt-1">
+                            Textura ultra cremosa de la casa. Incluye 1 salsa y 1 topping clásico a tu elección.
+                        </p>
+                    </div>
+                    <button onclick="personalizarPostreEnSimulador('pave', 'clasico')" class="w-full md:w-auto bg-dulceGreen hover:bg-dulceGreenHover text-white px-5 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap">
+                        🧁 Diseñar Pavé
+                    </button>
+                </div>
+
+                <h4 class="font-serif text-lg font-bold text-dulceBrownDark mb-3">⭐ Pavés Premium ($18.000)</h4>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-white p-5 rounded-3xl border border-dulceBox flex flex-col justify-between shadow-sm">
+                        <div>
+                            <h5 class="font-serif text-base font-bold text-dulceBrownDark">Pavé de Fresas con Crema 🍓</h5>
+                            <p class="text-xs text-dulceBrownLight/80 font-medium mt-2">Fresas frescas, crema especial, queso rallado prémium, y 2 salsas a elección.</p>
+                        </div>
+                        <button onclick="comprarPostrePredefinido('Pavé de Fresas con Crema', 18000, 'Fresas 🍓', 'Queso 🧀')" class="mt-4 w-full bg-dulceBrownDark hover:bg-dulceBrownLight text-white py-2.5 rounded-xl text-xs font-bold transition-all">
+                            ➕ Añadir al Carrito
+                        </button>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-3xl border border-dulceBox flex flex-col justify-between shadow-sm">
+                        <div>
+                            <h5 class="font-serif text-base font-bold text-dulceBrownDark">Pavé de Oblea 🥞</h5>
+                            <p class="text-xs text-dulceBrownLight/80 font-medium mt-2">Trocitos de oblea crujiente, queso, arequipe cremoso y salsa de mora artesanal. Incluye 2 salsas.</p>
+                        </div>
+                        <button onclick="comprarPostrePredefinido('Pavé de Oblea Especial', 18000, 'Oblea 🥞', 'Queso 🧀')" class="mt-4 w-full bg-dulceBrownDark hover:bg-dulceBrownLight text-white py-2.5 rounded-xl text-xs font-bold transition-all">
+                            ➕ Añadir al Carrito
+                        </button>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-3xl border border-dulceBox flex flex-col justify-between shadow-sm">
+                        <div>
+                            <h5 class="font-serif text-base font-bold text-dulceBrownDark">Pavé de Maracuyá 💛</h5>
+                            <p class="text-xs text-dulceBrownLight/80 font-medium mt-2">Sedosa crema artesanal de maracuyá, coronada con lecherita. Incluye 2 salsas.</p>
+                        </div>
+                        <button onclick="comprarPostrePredefinido('Pavé de Crema de Maracuyá', 18000, 'Crema de Maracuyá 💛')" class="mt-4 w-full bg-dulceBrownDark hover:bg-dulceBrownLight text-white py-2.5 rounded-xl text-xs font-bold transition-all">
+                            ➕ Añadir al Carrito
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EXTRAS -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+                <div class="bg-[#FAF6F0] border-2 border-dashed border-dulceGold/30 p-5 rounded-2xl text-center">
+                    <h5 class="font-serif text-sm font-bold text-dulceBrownDark mb-2">🍫 Toppings Clásicos Extras (+ $2.000)</h5>
+                    <p class="text-xs font-bold text-dulceBrownLight">Milo 🤎 • Leche Klim 🥛 • Brownie 🧁 • Ducales 🍪 • Quipito 🎉 • Oreo 🍪 • Minichips 🍪</p>
+                </div>
+                <div class="bg-[#FAF6F0] border-2 border-dashed border-dulceGold/30 p-5 rounded-2xl text-center">
+                    <h5 class="font-serif text-sm font-bold text-dulceBrownDark mb-2">⭐ Toppings Premium Extras (+ $3.000)</h5>
+                    <p class="text-xs font-bold text-dulceBrownLight">Oblea 🥞 • Queso 🧀 • Fresas 🍓 • Crema de Maracuyá 💛 • Mango 🥭</p>
+                </div>
+            </div>
+
+            <!-- EXPERIENCIA + REDES SOCIALES -->
+            <div class="bg-gradient-to-br from-dulceBrownDark to-[#35251a] text-white rounded-3xl px-5 py-5 shadow-xl border border-dulceGold/30 text-center space-y-3 mt-8">
+                <div class="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-5">
+                    <div>
+                        <span class="text-[10px] font-bold text-dulceGold uppercase tracking-[0.2em] block">¡Tu opinión nos llena el corazón!</span>
+                        <h3 class="font-serif text-lg font-bold">✨ Comparte tu Experiencia Dulce ✨</h3>
+                    </div>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSdZF1wAQ3oNtfDJUWZo_-jx1AeYeN5DpB09_s619DB3IoUxWA/viewform" target="_blank" rel="noopener noreferrer" class="shrink-0 inline-flex items-center justify-center gap-2 bg-white text-dulceBrownDark px-4 py-2 rounded-full text-xs font-bold shadow-sm transition-all hover:scale-[1.02]">
+                        ⭐ Dejar mi opinión
+                    </a>
+                </div>
+                <p class="text-[10px] text-dulceCream/85 leading-relaxed font-medium max-w-2xl mx-auto">
+                    ¿Qué tal te pareció tu postre? Cuéntanos brevemente tu experiencia y, si quieres, compártela en tus redes etiquetándonos. 💕
+                </p>
+                <div class="pt-1 flex justify-center gap-2 flex-wrap">
+                    <a href="https://instagram.com/La_casadulce1" target="_blank" rel="noopener noreferrer" class="px-3.5 py-1.5 bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 rounded-full text-[10px] font-bold transition-all hover:scale-105">
+                        📸 Instagram: @La_casadulce1
+                    </a>
+                    <a href="https://tiktok.com/@la.casa.dulce62" target="_blank" rel="noopener noreferrer" class="px-3.5 py-1.5 bg-white text-black rounded-full text-[10px] font-bold transition-all hover:scale-105">
+                        🎥 TikTok: la.casa.dulce62
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== ARMAR ==================== -->
+        <section id="tabContent_armar" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+            <div class="lg:col-span-5 bg-white rounded-3xl p-5 shadow-sm border border-dulceBox flex flex-col items-center justify-center min-h-[420px]">
+                <h3 class="font-serif text-lg font-bold text-dulceBrownDark text-center">Diseñador Virtual</h3>
+                <p class="text-[10px] text-dulceAccent uppercase font-bold tracking-widest mb-4 text-center">¡Crea tu combinación perfecta!</p>
+
+                <div class="relative w-56 h-64 flex items-end justify-center mb-6">
+                    <div id="v_salsa_Mora" class="absolute inset-x-3 top-20 h-24 bg-red-700/85 rounded-b-xl hidden z-20 mix-blend-multiply pointer-events-none">
+                        <svg viewBox="0 0 100 50" class="w-full h-8 -mt-7 text-red-700/85 fill-current sauce-drip"><path d="M 0,0 Q 15,18 30,5 Q 45,28 60,10 Q 75,32 90,5 L 100,0 L 100,50 L 0,50 Z"/></svg>
+                    </div>
+                    <div id="v_salsa_Chocolate" class="absolute inset-x-3 top-20 h-24 bg-[#3E2415]/95 rounded-b-xl hidden z-20 mix-blend-multiply pointer-events-none">
+                        <svg viewBox="0 0 100 50" class="w-full h-8 -mt-7 text-[#3E2415]/95 fill-current sauce-drip"><path d="M 0,0 Q 15,25 30,5 Q 45,30 60,10 Q 75,35 90,5 L 100,0 L 100,50 L 0,50 Z"/></svg>
+                    </div>
+                    <div id="v_salsa_Arequipe" class="absolute inset-x-3 top-20 h-24 bg-[#B58548]/95 rounded-b-xl hidden z-20 mix-blend-multiply pointer-events-none">
+                        <svg viewBox="0 0 100 50" class="w-full h-8 -mt-7 text-[#B58548]/95 fill-current sauce-drip"><path d="M 0,0 Q 10,20 25,5 Q 40,25 55,8 Q 70,30 85,5 L 100,0 L 100,50 L 0,50 Z"/></svg>
+                    </div>
+                    <div id="v_salsa_Lecherita" class="absolute inset-x-3 top-20 h-24 bg-[#FFFDF2]/90 rounded-b-xl hidden z-20 mix-blend-multiply pointer-events-none">
+                        <svg viewBox="0 0 100 50" class="w-full h-8 -mt-7 text-[#FFFDF2]/90 fill-current sauce-drip"><path d="M 0,0 Q 10,15 20,5 Q 40,25 60,8 Q 80,30 90,5 L 100,0 L 100,50 L 0,50 Z"/></svg>
+                    </div>
+
+                    <div id="v_crema_base" class="absolute inset-x-3 bottom-3 h-0 bg-gradient-to-t from-[#FFFDF8] to-[#F3ECD5] rounded-b-2xl border-t border-dulceBrownDark/10 hidden z-10 transition-all"></div>
+                    <div id="v_toppings_container" class="absolute inset-x-3 top-10 bottom-3 z-30 pointer-events-none overflow-hidden rounded-b-2xl"></div>
+
+                    <div class="absolute bottom-0 w-full h-40 bg-[#D4B285] border-x-4 border-b-4 border-[#B9986D] rounded-b-3xl shadow-lg flex flex-col items-center justify-between py-4 overflow-hidden z-40">
+                        <div class="relative w-16 h-16 bg-white rounded-full border border-dulceGreen flex flex-col items-center justify-center p-1 shadow-inner z-10">
+                            <span class="font-serif text-[7px] font-bold text-dulceGreen uppercase">LA CASA</span>
+                            <span class="text-xs">🍓</span>
+                            <span class="font-serif text-[7px] font-bold text-dulceGreen uppercase">DULCE</span>
+                        </div>
+                        <span id="visualSizeLabel" class="text-[9px] font-extrabold uppercase tracking-widest text-dulceBrownLight/80 z-10">Selecciona producto</span>
+                    </div>
+                </div>
+
+                <div class="text-center bg-[#FAF6F0] border border-dulceBox px-6 py-2 rounded-xl w-full">
+                    <span class="text-[10px] font-bold text-dulceBrownLight/60 uppercase block">Total este producto</span>
+                    <span id="visualTotal" class="font-serif text-2xl font-extrabold text-dulceGreen">$0</span>
+                </div>
+            </div>
+
+            <div class="lg:col-span-7 bg-white rounded-3xl p-6 shadow-sm border border-dulceBox space-y-6">
+
+                <div>
+                    <span class="text-[10px] font-extrabold uppercase tracking-widest text-dulceGold block mb-2">Paso 1: ¿Qué vas a armar hoy?</span>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="seleccionarTipoProductoWizard('fresas')" id="btnTipo_fresas" class="p-3 text-center rounded-2xl border-2 border-dulceBox hover:border-dulceAccent font-bold text-xs bg-white text-dulceBrownDark">
+                            🍓 Fresas con Crema
+                        </button>
+                        <button onclick="seleccionarTipoProductoWizard('pave')" id="btnTipo_pave" class="p-3 text-center rounded-2xl border-2 border-dulceBox hover:border-dulceGreen font-bold text-xs bg-white text-dulceBrownDark">
+                            🧁 Pavé Cremoso
+                        </button>
+                    </div>
+                </div>
+
+                <div id="wizardPasoTamano" class="hidden">
+                    <span class="text-[10px] font-extrabold uppercase tracking-widest text-dulceGold block mb-2">Paso 2: Selecciona el Tamaño</span>
+                    <div class="grid grid-cols-3 gap-2" id="wizardTamanoContainer"></div>
+                </div>
+
+                <div id="wizardConfigSeccion" class="hidden space-y-6 border-t border-dulceBox pt-4">
+
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-[10px] font-extrabold uppercase tracking-widest text-dulceGold block">Salsas Incluidas</span>
+                            <span id="wizardSalsasContador" class="text-xs font-bold text-dulceAccent">0 de 1</span>
+                        </div>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-2" id="wizardSalsasContainer"></div>
+                    </div>
+
+                    <div>
+                        <span class="text-[10px] font-extrabold uppercase tracking-widest text-dulceGold block mb-2">Topping Incluido</span>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-2" id="wizardToppingIncluidoContainer"></div>
+                    </div>
+
+                    <div class="border-t border-dulceBox pt-4">
+                        <span class="text-[10px] font-extrabold uppercase tracking-widest text-dulceGold block mb-2">Añadir Toppings Extras (Opcionales)</span>
+                        <div class="space-y-4">
+                            <div>
+                                <h5 class="text-[10px] font-bold uppercase text-dulceGreen mb-2">Clásicos (+ $2.000 c/u)</h5>
+                                <div class="grid grid-cols-2 md:grid-cols-3 gap-2" id="wizardToppingsExtraClasicos"></div>
+                            </div>
+                            <div>
+                                <h5 class="text-[10px] font-bold uppercase text-dulceAccent mb-2">Premium (+ $3.000 c/u)</h5>
+                                <div class="grid grid-cols-2 md:grid-cols-3 gap-2" id="wizardToppingsExtraPremium"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-dulceBox pt-4 flex justify-end">
+                        <button onclick="añadirPostreArmadoAlCarrito()" class="w-full bg-dulceGreen hover:bg-dulceGreenHover text-white py-3 rounded-2xl text-xs font-bold uppercase tracking-wider transition-all shadow-md">
+                            🛒 Agregar creación al carrito
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== CARRITO ==================== -->
+        <section id="tabContent_carrito" class="hidden space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+                <div class="lg:col-span-7 bg-white rounded-3xl p-6 shadow-sm border border-dulceBox space-y-4">
+                    <h3 class="font-serif text-xl font-bold text-dulceBrownDark border-b border-dulceBox pb-3 flex items-center justify-between">
+                        <span>Tus Productos</span>
+                        <span id="carritoItemsContador" class="text-xs bg-dulceGold/30 text-dulceBrownDark px-2.5 py-0.5 rounded-full font-bold">0 Items</span>
+                    </h3>
+                    <div id="carritoItemsList" class="space-y-3"></div>
+                </div>
+
+                <div class="lg:col-span-5 bg-white rounded-3xl p-6 shadow-lg border border-dulceBox space-y-4">
+                    <h3 class="font-serif text-xl font-bold text-dulceBrownDark border-b border-dulceBox pb-3 text-center">Confirmar Pedido</h3>
+
+                    <div>
+                        <label class="block text-[10px] font-bold mb-1 text-dulceBrownDark uppercase tracking-wider">Notas Adicionales / Especificaciones:</label>
+                        <textarea id="cartEspecificaciones" rows="2" placeholder="Ej: Sin queso, enviar salsas aparte..." class="w-full border border-dulceBox rounded-xl p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-dulceGold bg-dulceCream/25 text-dulceBrownLight font-medium"></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="cambiarEntregaCarrito('recoger')" id="cartBtnEntregaRecoger" class="p-2.5 text-center rounded-xl border-2 border-dulceGreen bg-dulceCream text-dulceGreen font-bold text-xs transition-all">
+                            🏪 Recoger en Tienda
+                        </button>
+                        <button onclick="cambiarEntregaCarrito('domicilio')" id="cartBtnEntregaDomicilio" class="p-2.5 text-center rounded-xl border border-dulceBox hover:bg-dulceCream text-dulceBrownLight font-bold text-xs transition-all">
+                            🛵 Domicilio
+                        </button>
+                    </div>
+
+                    <div id="cartDivBarrios" class="hidden space-y-1">
+                        <label class="block text-[10px] font-bold text-dulceBrownLight uppercase">Selecciona tu Barrio / Zona *</label>
+                        <select id="cartSelectBarrio" onchange="actualizarTarifaDomicilio()" class="w-full border border-dulceBox rounded-xl p-2.5 text-xs bg-white text-dulceBrownDark font-bold focus:outline-none focus:ring-2 focus:ring-dulceGold">
+                            <option value="" data-precio="0">-- Selecciona un barrio --</option>
+                            <option value="Centro" data-precio="6000">Centro - $6.000</option>
+                            <option value="El Tambo" data-precio="6000">El Tambo - $6.000</option>
+                            <option value="Kennedy" data-precio="6000">Kennedy - $6.000</option>
+                            <option value="Margaritas" data-precio="6000">Margaritas - $6.000</option>
+                            <option value="Jardín (Mercosur, Las Begonias, Los Lirios, Las Dalias)" data-precio="7000">Jardín (Mercosur, Begonias, Lirios...) - $7.000</option>
+                            <option value="Zona Minera" data-precio="7000">Zona Minera - $7.000</option>
+                            <option value="Jazmín" data-precio="7000">Jazmín - $7.000</option>
+                            <option value="San Judas" data-precio="7000">San Judas - $7.000</option>
+                            <option value="Zona Norte" data-precio="9000">Zona Norte - $9.000</option>
+                            <option value="Poblado" data-precio="9000">Poblado - $9.000</option>
+                            <option value="Cabí / Cascorba" data-precio="9000">Cabí / Cascorba - $9.000</option>
+                        </select>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-bold mb-1 text-dulceBrownLight">Nombre Completo *</label>
+                            <input type="text" id="cartNombre" placeholder="¿A nombre de quién?" class="w-full border border-dulceBox rounded-xl p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-dulceGold text-dulceBrownLight font-semibold">
+                        </div>
+                        <div id="cartDivDireccion" class="opacity-45 pointer-events-none">
+                            <label class="block text-xs font-bold mb-1 text-dulceBrownLight">Dirección Exacta *</label>
+                            <input type="text" id="cartDireccion" placeholder="Ej: Calle 15 #23-45" class="w-full border border-dulceBox rounded-xl p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-dulceGold text-dulceBrownLight font-semibold">
+                        </div>
+                    </div>
+
+                    <div class="border-t border-dulceBox pt-3 space-y-1 text-xs text-dulceBrownLight">
+                        <div class="flex justify-between">
+                            <span>Subtotal Productos:</span>
+                            <span id="cartSubtotal" class="font-bold">$0</span>
+                        </div>
+                        <div id="cartRowDomicilio" class="flex justify-between hidden">
+                            <span>🛵 Domicilio:</span>
+                            <span id="cartMontoDomicilio" class="font-bold text-dulceAccent">+$0</span>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-dulceBox pt-3 flex justify-between items-center text-dulceBrownDark">
+                        <span class="font-extrabold text-sm">TOTAL FINAL:</span>
+                        <span id="cartTotalMonto" class="font-serif text-2xl font-extrabold text-dulceGreen">$0</span>
+                    </div>
+
+                    <button onclick="enviarPedidoCompletoPorWhatsApp()" class="w-full bg-dulceGreen hover:bg-dulceGreenHover text-white font-bold py-3.5 rounded-2xl flex items-center justify-center gap-2 shadow-md transition-all text-xs uppercase tracking-wider">
+                        📲 Enviar Pedido por WhatsApp
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- RESEÑAS APROBADAS: solo se muestran las que tú marques como PUBLICAR = SI -->
+    <section id="resenasAprobadas" class="max-w-4xl mx-auto px-4 mb-12 hidden">
+        <div class="flex items-center gap-3 mb-4">
+            <div class="h-px flex-1 bg-dulceBox"></div>
+            <h2 class="font-serif text-xl font-extrabold text-dulceBrownDark whitespace-nowrap">
+                ⭐ Lo que dicen nuestros clientes
+            </h2>
+            <div class="h-px flex-1 bg-dulceBox"></div>
+        </div>
+        <div id="listaResenasAprobadas" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </section>
+
+    <!-- MODAL -->
+    <div id="modalAlert" class="fixed inset-0 bg-black/55 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-[32px] max-w-sm w-full p-6 text-center space-y-4 shadow-2xl border border-dulceBox">
+            <div id="modalIcon" class="text-4xl">⚠️</div>
+            <h4 id="modalTitle" class="font-serif text-lg font-bold text-dulceBrownDark">Atención</h4>
+            <p id="modalMsg" class="text-xs text-dulceBrownLight font-semibold leading-relaxed">Mensaje</p>
+            <button onclick="closeModal()" class="w-full bg-dulceBrownDark hover:bg-dulceBrownLight text-white font-bold py-3 rounded-2xl text-xs uppercase">Entendido</button>
+        </div>
+    </div>
+
+    <script>
+        const PRECIO_PAVE_CLASICO = 15000;
+        const PRECIO_PAVE_PREMIUM = 18000;
+        const COSTO_TOPPING_CLASICO = 2000;
+        const COSTO_TOPPING_PREMIUM = 3000;
+
+        const salsas = ["Arequipe", "Chocolate", "Lecherita", "Salsa de Mora 🍇"];
+        const toppingsClasicos = ["Milo 🤎", "Leche Klim 🥛", "Brownie 🧁", "Galletas Ducales 🍪", "Quipito 🎉", "Oreo 🍪", "Minichips 🍪"];
+        const toppingsPremium = ["Oblea 🥞", "Queso 🧀", "Fresas 🍓", "Crema de Maracuyá 💛", "Mango 🥭"];
+
+        const toppingEmojis = {
+            "Milo 🤎": "🤎",
+            "Leche Klim 🥛": "🥛",
+            "Brownie 🧁": "🧁",
+            "Galletas Ducales 🍪": "🍪",
+            "Quipito 🎉": "🎉",
+            "Oreo 🍪": "🍪",
+            "Minichips 🍪": "🍪",
+            "Oblea 🥞": "🥞",
+            "Queso 🧀": "🧀",
+            "Fresas 🍓": "🍓",
+            "Crema de Maracuyá 💛": "💛",
+            "Mango 🥭": "🥭"
+        };
+
+        let carrito = [];
+        let tabActivo = 'carta';
+
+        let simTipoProducto = null;
+        let simOpcionTamano = null;
+        let simPrecioBase = 0;
+        let simSalsas = [];
+        let simToppingIncluido = null;
+        let simAdiciones = [];
+
+        let tipoEntregaCarrito = 'recoger';
+        let costoDomicilioSeleccionado = 0;
+
+        window.onload = function() {
+            renderizarSalsasWizard();
+            renderizarToppingIncluidoWizard();
+            renderizarAdicionesWizard();
+            actualizarTotalSimulacion();
+            actualizarCarritoUI();
+        };
+
+        function switchTab(tabId) {
+            tabActivo = tabId;
+
+            ['carta', 'armar', 'carrito'].forEach(t => {
+                const btn = document.getElementById(`tabButton_${t}`);
+                const content = document.getElementById(`tabContent_${t}`);
+
+                if (t === tabId) {
+                    btn.className = "flex-1 py-3 px-4 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 bg-dulceBrownDark text-white shadow-md";
+                    content.classList.remove("hidden");
+                } else {
+                    btn.className = "flex-1 py-3 px-4 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 text-dulceBrownDark/70 hover:bg-white/40";
+                    content.classList.add("hidden");
+                }
+            });
+
+            if (tabId === 'carrito') actualizarCarritoUI();
+        }
+
+        function renderizarSalsasWizard() {
+            document.getElementById("wizardSalsasContainer").innerHTML = salsas.map(s => `
+                <button onclick="toggleSalsaWizard('${s}')" id="wSalsaBtn_${s.replace(/\s+/g, '')}" class="p-2.5 text-center text-[10px] font-bold rounded-xl border border-dulceBox hover:bg-dulceCream/40 transition-all bg-white text-dulceBrownDark">
+                    ${s}
+                </button>
+            `).join('');
+        }
+
+        function renderizarToppingIncluidoWizard() {
+            document.getElementById("wizardToppingIncluidoContainer").innerHTML = toppingsClasicos.map(t => `
+                <button onclick="seleccionarToppingIncluidoWizard('${t}')" id="wTopInclBtn_${t.replace(/\s+/g, '')}" class="p-2.5 text-center text-[10px] font-bold rounded-xl border border-dulceBox hover:bg-dulceCream/40 transition-all bg-white text-dulceBrownDark">
+                    ${t}
+                </button>
+            `).join('');
+        }
+
+        function renderizarAdicionesWizard() {
+            document.getElementById("wizardToppingsExtraClasicos").innerHTML = toppingsClasicos.map(t => `
+                <button onclick="toggleAdicionWizard('${t}', ${COSTO_TOPPING_CLASICO})" id="wAdicBtn_${t.replace(/\s+/g, '')}" class="p-2 text-center text-[10px] font-bold rounded-xl border border-dulceBox bg-white hover:bg-dulceCream/30 transition-all text-dulceBrownDark flex justify-between items-center px-3">
+                    <span>${t}</span>
+                    <span class="text-[9px] text-dulceAccent font-semibold">+$2.000</span>
+                </button>
+            `).join('');
+
+            document.getElementById("wizardToppingsExtraPremium").innerHTML = toppingsPremium.map(t => `
+                <button onclick="toggleAdicionWizard('${t}', ${COSTO_TOPPING_PREMIUM})" id="wAdicBtn_${t.replace(/\s+/g, '')}" class="p-2 text-center text-[10px] font-bold rounded-xl border border-dulceBox bg-white hover:bg-dulceCream/30 transition-all text-dulceBrownDark flex justify-between items-center px-3">
+                    <span>${t}</span>
+                    <span class="text-[9px] text-dulceAccent font-semibold">+$3.000</span>
+                </button>
+            `).join('');
+        }
+
+        function seleccionarTipoProductoWizard(tipo) {
+            simTipoProducto = tipo;
+            simOpcionTamano = null;
+            simPrecioBase = 0;
+            simSalsas = [];
+            simToppingIncluido = null;
+            simAdiciones = [];
+
+            const btnFresas = document.getElementById("btnTipo_fresas");
+            const btnPave = document.getElementById("btnTipo_pave");
+            const pasoTamano = document.getElementById("wizardPasoTamano");
+            const containerTamano = document.getElementById("wizardTamanoContainer");
+
+            if (tipo === 'fresas') {
+                btnFresas.className = "p-3 text-center rounded-2xl border-2 border-dulceAccent bg-dulceCream/30 font-bold text-xs text-dulceAccent shadow-md";
+                btnPave.className = "p-3 text-center rounded-2xl border-2 border-dulceBox hover:border-dulceGreen font-bold text-xs bg-white text-dulceBrownDark";
+
+                containerTamano.innerHTML = `
+                    <button onclick="seleccionarTamanoWizard('12oz', 18000, 'Vaso 12 Oz')" id="wBtnTam_12oz" class="p-3 text-center rounded-xl border border-dulceBox font-bold text-xs bg-white">12 Oz<br><span class="text-[10px] text-dulceGreen">$18.000</span></button>
+                    <button onclick="seleccionarTamanoWizard('16oz', 24000, 'Vaso 16 Oz')" id="wBtnTam_16oz" class="p-3 text-center rounded-xl border border-dulceBox font-bold text-xs bg-white">16 Oz<br><span class="text-[10px] text-dulceGreen">$24.000</span></button>
+                    <button onclick="seleccionarTamanoWizard('22oz', 28000, 'Vaso 22 Oz')" id="wBtnTam_22oz" class="p-3 text-center rounded-xl border border-dulceBox font-bold text-xs bg-white">22 Oz<br><span class="text-[10px] text-dulceGreen">$28.000</span></button>
+                `;
+            } else {
+                btnPave.className = "p-3 text-center rounded-2xl border-2 border-dulceGreen bg-dulceCream/30 font-bold text-xs text-dulceGreen shadow-md";
+                btnFresas.className = "p-3 text-center rounded-2xl border-2 border-dulceBox hover:border-dulceAccent font-bold text-xs bg-white text-dulceBrownDark";
+
+                containerTamano.innerHTML = `
+                    <button onclick="seleccionarTamanoWizard('clasico', 15000, 'Pavé Clásico')" id="wBtnTam_clasico" class="p-3 text-center rounded-xl border border-dulceBox font-bold text-xs bg-white">Pavé Clásico<br><span class="text-[10px] text-dulceGreen">$15.000</span></button>
+                    <button onclick="seleccionarTamanoWizard('premium', 18000, 'Pavé Premium')" id="wBtnTam_premium" class="p-3 text-center rounded-xl border border-dulceBox font-bold text-xs bg-white">Pavé Premium<br><span class="text-[10px] text-dulceAccent">$18.000</span></button>
+                `;
+            }
+
+            pasoTamano.classList.remove("hidden");
+            document.getElementById("wizardConfigSeccion").classList.add("hidden");
+            document.getElementById("v_crema_base").classList.add("hidden");
+            document.getElementById("v_toppings_container").innerHTML = "";
+
+            renderizarSalsasWizard();
+            renderizarToppingIncluidoWizard();
+            renderizarAdicionesWizard();
+            actualizarTotalSimulacion();
+        }
+
+        function seleccionarTamanoWizard(tamanoKey, precio, labelText) {
+            simOpcionTamano = tamanoKey;
+            simPrecioBase = precio;
+
+            const options = simTipoProducto === 'fresas'
+                ? ['12oz', '16oz', '22oz']
+                : ['clasico', 'premium'];
+
+            options.forEach(opt => {
+                const btn = document.getElementById(`wBtnTam_${opt}`);
+                if (btn) {
+                    if (opt === tamanoKey) {
+                        btn.className = "p-3 text-center rounded-xl border-2 border-dulceGold bg-dulceCream/50 font-bold text-xs text-dulceBrownDark shadow-sm";
+                    } else {
+                        btn.className = "p-3 text-center rounded-xl border border-dulceBox font-bold text-xs bg-white text-dulceBrownDark";
+                    }
+                }
+            });
+
+            document.getElementById("visualSizeLabel").innerText = labelText;
+            document.getElementById("wizardConfigSeccion").classList.remove("hidden");
+
+            const maxS = (simTipoProducto === 'pave' && tamanoKey === 'premium') ? 2 : 1;
+            document.getElementById("wizardSalsasContador").innerText = `0 de ${maxS}`;
+
+            const cream = document.getElementById("v_crema_base");
+            cream.classList.remove("hidden");
+            cream.style.height = "75%";
+
+            actualizarTotalSimulacion();
+        }
+
+        function toggleSalsaWizard(salsa) {
+            if (!simOpcionTamano) return;
+
+            const maxSalsas = (simTipoProducto === 'pave' && simOpcionTamano === 'premium') ? 2 : 1;
+            const btn = document.getElementById(`wSalsaBtn_${salsa.replace(/\s+/g, '')}`);
+
+            if (simSalsas.includes(salsa)) {
+                simSalsas = simSalsas.filter(s => s !== salsa);
+                btn.className = "p-2.5 text-center text-[10px] font-bold rounded-xl border border-dulceBox hover:bg-dulceCream/40 transition-all bg-white text-dulceBrownDark";
+            } else {
+                if (simSalsas.length < maxSalsas) {
+                    simSalsas.push(salsa);
+                    btn.className = "p-2.5 text-center text-[10px] font-bold rounded-xl border-2 border-dulceAccent bg-dulceAccent text-white transition-all shadow-sm";
+                } else {
+                    abrirModal("Límite de Salsa", `Esta opción permite un máximo de ${maxSalsas} salsa(s) incluida(s).`, "🍯");
+                }
+            }
+
+            document.getElementById("wizardSalsasContador").innerText = `${simSalsas.length} de ${maxSalsas}`;
+            actualizarTotalSimulacion();
+        }
+
+        function seleccionarToppingIncluidoWizard(topping) {
+            simToppingIncluido = topping;
+
+            toppingsClasicos.forEach(t => {
+                const btn = document.getElementById(`wTopInclBtn_${t.replace(/\s+/g, '')}`);
+
+                if (t === topping) {
+                    btn.className = "p-2.5 text-center text-[10px] font-bold rounded-xl border-2 border-dulceGreen bg-dulceCream/50 text-dulceGreen shadow-sm";
+                    agregarToppingAlVasoVisual(t);
+                } else {
+                    btn.className = "p-2.5 text-center text-[10px] font-bold rounded-xl border border-dulceBox hover:bg-dulceCream/40 bg-white text-dulceBrownDark";
+                    removerToppingDelVasoVisual(t);
+                }
+            });
+
+            actualizarTotalSimulacion();
+        }
+
+        function toggleAdicionWizard(topping, precio) {
+            const btn = document.getElementById(`wAdicBtn_${topping.replace(/\s+/g, '')}`);
+            const index = simAdiciones.findIndex(a => a.nombre === topping);
+
+            if (index > -1) {
+                simAdiciones.splice(index, 1);
+                btn.className = "p-2 text-center text-[10px] font-bold rounded-xl border border-dulceBox bg-white hover:bg-dulceCream/30 transition-all text-dulceBrownDark flex justify-between items-center px-3";
+                removerToppingDelVasoVisual(topping);
+            } else {
+                simAdiciones.push({ nombre: topping, precio });
+                btn.className = "p-2 text-center text-[10px] font-bold rounded-xl border-2 border-dulceGold bg-dulceCream/50 text-dulceBrownDark flex justify-between items-center px-3 shadow-sm";
+                agregarToppingAlVasoVisual(topping);
+            }
+
+            actualizarTotalSimulacion();
+        }
+
+        function actualizarTotalSimulacion() {
+            let total = simPrecioBase;
+
+            simAdiciones.forEach(a => total += a.precio);
+
+            document.getElementById("visualTotal").innerText = `$${total.toLocaleString()}`;
+
+            ["Mora", "Chocolate", "Arequipe", "Lecherita"].forEach(s => {
+                const el = document.getElementById(`v_salsa_${s}`);
+                if (el) el.classList.add("hidden");
+            });
+
+            simSalsas.forEach(s => {
+                if (s.includes("Mora")) document.getElementById("v_salsa_Mora").classList.remove("hidden");
+                if (s.includes("Chocolate")) document.getElementById("v_salsa_Chocolate").classList.remove("hidden");
+                if (s.includes("Arequipe")) document.getElementById("v_salsa_Arequipe").classList.remove("hidden");
+                if (s.includes("Lecherita")) document.getElementById("v_salsa_Lecherita").classList.remove("hidden");
+            });
+        }
+
+        function agregarToppingAlVasoVisual(topping) {
+            const container = document.getElementById("v_toppings_container");
+            const elementId = `v_item_${topping.replace(/\s+/g, '')}`;
+
+            if (document.getElementById(elementId)) return;
+
+            const emoji = toppingEmojis[topping] || "🍫";
+            const x = Math.floor(Math.random() * 65) + 12;
+            const y = Math.floor(Math.random() * 40) + 35;
+            const deg = Math.floor(Math.random() * 60) - 30;
+
+            const div = document.createElement("div");
+            div.id = elementId;
+            div.className = "absolute text-3xl z-30 topping-drop pointer-events-none select-none";
+            div.style.left = `${x}%`;
+            div.style.top = `${y}%`;
+            div.style.transform = `rotate(${deg}deg)`;
+            div.innerText = emoji;
+
+            container.appendChild(div);
+        }
+
+        function removerToppingDelVasoVisual(topping) {
+            const el = document.getElementById(`v_item_${topping.replace(/\s+/g, '')}`);
+            if (el) el.remove();
+        }
+
+        function personalizarPostreEnSimulador(tipo, opcion) {
+            switchTab('armar');
+            seleccionarTipoProductoWizard(tipo);
+
+            if (tipo === 'fresas') {
+                const precios = { '12oz': 18000, '16oz': 24000, '22oz': 28000 };
+                seleccionarTamanoWizard(opcion, precios[opcion], `Vaso Fresas ${opcion}`);
+            } else {
+                const precios = { 'clasico': 15000, 'premium': 18000 };
+                seleccionarTamanoWizard(opcion, precios[opcion], `Pavé ${opcion}`);
+            }
+        }
+
+        function comprarPostrePredefinido(nombre, precio, detalles) {
+            carrito.push({
+                nombre,
+                precio,
+                detalles,
+                adiciones: []
+            });
+
+            actualizarCarritoUI();
+            abrirModal("🛒 Producto Añadido", `¡${nombre} se agregó a tu carrito!`, "🍓");
+        }
+
+        function añadirPostreArmadoAlCarrito() {
+            if (!simTipoProducto || !simOpcionTamano) {
+                abrirModal("Incompleto", "Por favor selecciona el producto y su tamaño.", "⚠️");
+                return;
+            }
+
+            if (simSalsas.length === 0) {
+                abrirModal("Salsa Requerida", "Elige la salsa incluida en tu producto.", "🍯");
+                return;
+            }
+
+            if (!simToppingIncluido) {
+                abrirModal("Topping Requerido", "Elige el topping incluido en tu producto.", "🍫");
+                return;
+            }
+
+            let titulo = simTipoProducto === 'fresas'
+                ? `Fresas con Crema (${simOpcionTamano})`
+                : `Pavé Cremoso (${simOpcionTamano})`;
+
+            let totalItem = simPrecioBase + simAdiciones.reduce((acc, a) => acc + a.precio, 0);
+            let detalles = `Salsa: ${simSalsas.join(', ')} | Topping: ${simToppingIncluido}`;
+
+            carrito.push({
+                nombre: titulo,
+                precio: totalItem,
+                detalles,
+                adiciones: [...simAdiciones]
+            });
+
+            actualizarCarritoUI();
+            abrirModal("🛒 Producto Diseñado", "¡Agregado al carrito exitosamente!", "🎉");
+            switchTab('carrito');
+        }
+
+        function actualizarCarritoUI() {
+            const listContainer = document.getElementById("carritoItemsList");
+            const badgeCount = document.getElementById("badgeCarritoCount");
+            const itemsCount = document.getElementById("carritoItemsContador");
+            const cartTotalMonto = document.getElementById("cartTotalMonto");
+            const cartSubtotal = document.getElementById("cartSubtotal");
+            const cartRowDomicilio = document.getElementById("cartRowDomicilio");
+
+            badgeCount.innerText = carrito.length;
+
+            if (carrito.length > 0) {
+                badgeCount.classList.remove("hidden");
+                itemsCount.innerText = `${carrito.length} Items`;
+            } else {
+                badgeCount.classList.add("hidden");
+                itemsCount.innerText = "0 Items";
+            }
+
+            if (carrito.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="text-center py-12 text-dulceBrownLight/60 text-xs font-bold">
+                        📦 Tu carrito está vacío.<br>
+                        Explora la <span onclick="switchTab('carta')" class="text-dulceGold hover:underline cursor-pointer">Carta</span> o
+                        <span onclick="switchTab('armar')" class="text-dulceGold hover:underline cursor-pointer">Arma tu postre</span>.
+                    </div>
+                `;
+
+                cartSubtotal.innerText = "$0";
+                cartRowDomicilio.classList.add("hidden");
+                cartTotalMonto.innerText = "$0";
+                return;
+            }
+
+            let subtotal = 0;
+
+            listContainer.innerHTML = carrito.map((item, index) => {
+                subtotal += item.precio;
+
+                let extrasText = item.adiciones.length > 0
+                    ? `<div class="text-[10px] text-dulceAccent font-semibold mt-1">➕ Extras: ${item.adiciones.map(a => a.nombre).join(', ')}</div>`
+                    : '';
+
+                return `
+                    <div class="p-4 bg-dulceCream/45 border border-dulceBox rounded-2xl flex justify-between items-center gap-4">
+                        <div>
+                            <h4 class="font-bold text-sm text-dulceBrownDark">${item.nombre}</h4>
+                            <p class="text-[11px] text-dulceBrownLight font-medium">${item.detalles}</p>
+                            ${extrasText}
+                        </div>
+
+                        <div class="text-right flex flex-col items-end gap-2">
+                            <span class="font-serif text-sm font-bold text-dulceGreen">$${item.precio.toLocaleString()}</span>
+                            <button onclick="eliminarDelCarrito(${index})" class="text-[10px] text-red-500 font-bold hover:underline">Eliminar</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            cartSubtotal.innerText = `$${subtotal.toLocaleString()}`;
+
+            let totalGeneral = subtotal;
+
+            if (tipoEntregaCarrito === 'domicilio') {
+                totalGeneral += costoDomicilioSeleccionado;
+                cartRowDomicilio.classList.remove("hidden");
+                document.getElementById("cartMontoDomicilio").innerText = `+$${costoDomicilioSeleccionado.toLocaleString()}`;
+            } else {
+                cartRowDomicilio.classList.add("hidden");
+            }
+
+            cartTotalMonto.innerText = `$${totalGeneral.toLocaleString()}`;
+        }
+
+        function eliminarDelCarrito(index) {
+            carrito.splice(index, 1);
+            actualizarCarritoUI();
+        }
+
+        function cambiarEntregaCarrito(tipo) {
+            tipoEntregaCarrito = tipo;
+
+            const btnRecoger = document.getElementById("cartBtnEntregaRecoger");
+            const btnDomicilio = document.getElementById("cartBtnEntregaDomicilio");
+            const divDir = document.getElementById("cartDivDireccion");
+            const divBarrios = document.getElementById("cartDivBarrios");
+
+            if (tipo === 'recoger') {
+                btnRecoger.className = "p-2.5 text-center rounded-xl border-2 border-dulceGreen bg-dulceCream text-dulceGreen font-bold text-xs transition-all";
+                btnDomicilio.className = "p-2.5 text-center rounded-xl border border-dulceBox hover:bg-dulceCream text-dulceBrownLight font-bold text-xs transition-all";
+                divDir.classList.add("opacity-45", "pointer-events-none");
+                divBarrios.classList.add("hidden");
+                costoDomicilioSeleccionado = 0;
+            } else {
+                btnDomicilio.className = "p-2.5 text-center rounded-xl border-2 border-dulceGreen bg-dulceCream text-dulceGreen font-bold text-xs transition-all";
+                btnRecoger.className = "p-2.5 text-center rounded-xl border border-dulceBox hover:bg-dulceCream text-dulceBrownLight font-bold text-xs transition-all";
+                divDir.classList.remove("opacity-45", "pointer-events-none");
+                divBarrios.classList.remove("hidden");
+                actualizarTarifaDomicilio();
+            }
+
+            actualizarCarritoUI();
+        }
+
+        function actualizarTarifaDomicilio() {
+            const select = document.getElementById("cartSelectBarrio");
+            const selectedOption = select.options[select.selectedIndex];
+            costoDomicilioSeleccionado = parseInt(selectedOption.getAttribute("data-precio") || 0);
+            actualizarCarritoUI();
+        }
+
+        function enviarPedidoCompletoPorWhatsApp() {
+    if (carrito.length === 0) {
+        abrirModal(
+            "Carrito Vacío",
+            "Por favor agrega al menos un producto para enviar tu pedido.",
+            "🛒"
+        );
+        return;
+    }
+
+    const nombre = document.getElementById("cartNombre").value.trim();
+    const direccion = document.getElementById("cartDireccion").value.trim();
+    const barrioSelect = document.getElementById("cartSelectBarrio");
+    const barrioText = barrioSelect.value;
+    const especificaciones = document.getElementById("cartEspecificaciones").value.trim();
+
+    if (!nombre) {
+        abrirModal(
+            "Falta tu Nombre",
+            "Ingresa tu nombre para procesar la orden.",
+            "👤"
+        );
+        return;
+    }
+
+    if (tipoEntregaCarrito === "domicilio") {
+        if (!barrioText) {
+            abrirModal(
+                "Falta Barrio",
+                "Selecciona tu barrio en la lista desplegable.",
+                "📍"
+            );
+            return;
+        }
+
+        if (!direccion) {
+            abrirModal(
+                "Falta Dirección",
+                "Ingresa tu dirección exacta de entrega.",
+                "🏠"
+            );
+            return;
+        }
+    }
+
+    let mensaje = `🍰 *LA CASA DULCE* 🍰\n`;
+    mensaje += `✨ *¡Nuevo pedido recibido!* ✨\n\n`;
+
+    mensaje += `👤 *Cliente:* ${nombre}\n`;
+
+    if (tipoEntregaCarrito === "domicilio") {
+        mensaje += `🛵 *Entrega a domicilio*\n`;
+        mensaje += `📍 *Barrio:* ${barrioText}\n`;
+        mensaje += `🏠 *Dirección:* ${direccion}\n`;
+    } else {
+        mensaje += `🏪 *Modalidad:* Recoger en tienda\n`;
+    }
+
+    mensaje += `\n━━━━━━━━━━━━━━━━━━\n`;
+    mensaje += `🍨 *DETALLE DEL PEDIDO*\n`;
+    mensaje += `━━━━━━━━━━━━━━━━━━\n\n`;
+
+    let subtotal = 0;
+
+    carrito.forEach((p, i) => {
+        subtotal += p.precio;
+
+        mensaje += `*${i + 1}. ${p.nombre}*\n`;
+        mensaje += `💵 Precio: $${p.precio.toLocaleString()}\n`;
+        mensaje += `📝 ${p.detalles}\n`;
+
+        if (p.adiciones.length > 0) {
+            mensaje += `➕ *Extras:* ${p.adiciones
+                .map(a => a.nombre)
+                .join(", ")}\n`;
+        }
+
+        mensaje += `\n`;
+    });
+
+    mensaje += `━━━━━━━━━━━━━━━━━━\n`;
+    mensaje += `💵 *Subtotal:* $${subtotal.toLocaleString()}\n`;
+
+    let total = subtotal;
+
+    if (tipoEntregaCarrito === "domicilio") {
+        total += costoDomicilioSeleccionado;
+        mensaje += `🛵 *Domicilio:* $${costoDomicilioSeleccionado.toLocaleString()}\n`;
+    }
+
+    if (especificaciones) {
+        mensaje += `\n⚠️ *Notas del cliente:*\n`;
+        mensaje += `${especificaciones}\n`;
+    }
+
+    mensaje += `\n━━━━━━━━━━━━━━━━━━\n`;
+    mensaje += `💰 *TOTAL A PAGAR: $${total.toLocaleString()}*\n`;
+    mensaje += `━━━━━━━━━━━━━━━━━━\n\n`;
+
+    mensaje += `💕 ¡Gracias por elegir *La Casa Dulce*!\n`;
+    mensaje += `✨ Pedido generado desde nuestro Menú Interactivo.`;
+
+    const numeroWhatsApp = "573128903511"; // REEMPLAZAR CON TU NÚMERO
+
+    const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
+
+    window.open(url, "_blank");
+        }
+
+        // ================================================================
+        // RESEÑAS APROBADAS
+        // 1) Pon aquí la URL de tu Web App de Google Apps Script.
+        // 2) En la hoja de respuestas agrega una columna llamada PUBLICAR.
+        // 3) Escribe SI únicamente en las reseñas que quieras mostrar.
+        // ================================================================
+        const RESENAS_API_URL = "https://script.google.com/macros/s/AKfycbwbxKT0BaYWp7CljRAuYrd2ArGQB_tZ8AhimIM4GuF8jM1GSyKe8_PfEtEGjxqbMUhH/exec";
+
+        async function cargarResenasAprobadas() {
+            if (!RESENAS_API_URL || RESENAS_API_URL === "PON_AQUI_LA_URL_DE_TU_WEB_APP") return;
+
+            try {
+                const response = await fetch(RESENAS_API_URL, { cache: "no-store" });
+                if (!response.ok) throw new Error("No se pudo consultar las reseñas.");
+
+                const datos = await response.json();
+                if (!datos || datos.error || !Array.isArray(datos.resenas) || datos.resenas.length === 0) return;
+                const resenas = datos.resenas;
+
+                const contenedor = document.getElementById("listaResenasAprobadas");
+                const seccion = document.getElementById("resenasAprobadas");
+
+                resenas.forEach(resena => {
+                    const tarjeta = document.createElement("article");
+                    tarjeta.className = "bg-white rounded-3xl border border-dulceBox p-5 shadow-sm";
+
+                    const estrellas = document.createElement("div");
+                    estrellas.className = "text-dulceGold text-sm mb-2 tracking-wider";
+                    const cal = Math.max(0, Math.min(5, Number(resena.estrellas) || 0));
+                    estrellas.textContent = "★".repeat(cal) + "☆".repeat(5 - cal);
+
+                    const texto = document.createElement("p");
+                    texto.className = "text-sm text-dulceBrownLight leading-relaxed font-medium";
+                    texto.textContent = `“${resena.resena || ""}”`;
+
+                    const autor = document.createElement("p");
+                    autor.className = "text-[10px] font-bold text-dulceBrownDark uppercase tracking-wider mt-3";
+                    autor.textContent = `— ${resena.nombre || "Cliente"}`;
+
+                    tarjeta.appendChild(estrellas);
+                    tarjeta.appendChild(texto);
+                    tarjeta.appendChild(autor);
+                    contenedor.appendChild(tarjeta);
+                });
+
+                seccion.classList.remove("hidden");
+            } catch (error) {
+                console.warn("No se pudieron cargar las reseñas aprobadas.", error);
+            }
+        }
+
+        // Las reseñas se cargan solo después de que la página está lista.
+        window.addEventListener("load", cargarResenasAprobadas);
+
+        function abrirModal(titulo, mensaje, icono = "⚠️") {
+            document.getElementById("modalIcon").innerText = icono;
+            document.getElementById("modalTitle").innerText = titulo;
+            document.getElementById("modalMsg").innerText = mensaje;
+            document.getElementById("modalAlert").classList.remove("hidden");
+        }
+
+        function closeModal() {
+            document.getElementById("modalAlert").classList.add("hidden");
+        }
+    </script>
+</body>
+</html>
